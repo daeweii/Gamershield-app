@@ -1,0 +1,1 @@
+- [GamerShield privacy](gamershield-privacy.md) — keep password and scam-check inputs client-only; only HIBP hash prefixes may leave the browser.

@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/gamershield/"
+title = "GamerShield"
+description = "A free, privacy-first website that helps gamers assess password strength and look up compromised passwords without sending their password off-device."
+version = "1.0.0"
+id = "artifacts/gamershield"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/gamershield/" ]
+localPort = 21537
+
+[services.development]
+run = "pnpm --filter @workspace/gamershield run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/gamershield", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/gamershield/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "21537"
+BASE_PATH = "/gamershield/"
