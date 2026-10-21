@@ -1,0 +1,75 @@
+I'm building a website called GamerShield. It's a free tool that helps gamers protect their accounts from hackers and scammers.
+
+WHY I'M BUILDING IT
+I got hacked on PlayStation in middle school and nobody helped me figure out how it happened or how to stop it. That's what got me into cybersecurity. I'm now a cybersecurity major, and GamerShield is the tool I wish I'd had back then. It should be simple enough for a 13-year-old gamer to use and trustworthy enough that a parent would feel good about it.
+
+MOST IMPORTANT RULE: PRIVACY
+- Everything runs in the user's browser using JavaScript. No backend server should ever receive a password, link, or message the user types.
+- No user accounts, no logins, no database, no analytics, no tracking cookies.
+- Never store or log anything the user enters.
+- Put a short note on the site saying: "Everything you type stays on your device. We never see or save it."
+
+TECH
+- Plain HTML, CSS, and JavaScript (no framework needed), or a simple static site.
+- Mobile-friendly, since most gamers will open it on their phone.
+- Keep the code clean and well commented, because I'm learning from it and need to explain every part in interviews.
+
+FEATURES (each one gets its own tab or card on the home page)
+
+1. Password Check
+- User types a password into a hidden (password-type) field.
+- Rate strength from 0 to 6: +2 for 12+ characters (+1 for 8 to 11), +1 each for lowercase, uppercase, numbers, symbols, and -2 if it contains common words (password, 123456, qwerty, letmein, gamer, fortnite, minecraft, playstation, xbox, admin, roblox, valorant). Show WEAK, OKAY, or STRONG with a colored meter and specific tips.
+- Breach check using the free Have I Been Pwned Pwned Passwords range API with k-anonymity: SHA-1 hash the password in the browser with the Web Crypto API, send ONLY the first 5 characters of the hash to https://api.pwnedpasswords.com/range/{first5}, then compare the rest locally. Show how many times it appeared in breaches, or a "not found" message.
+- Include a short "How this works" explanation of k-anonymity so users understand their password never leaves their device.
+
+2. Password Generator
+- Option A: random 16-character password with uppercase, lowercase, numbers, and symbols (guarantee at least one of each). Use crypto.getRandomValues, not Math.random.
+- Option B: passphrase of 4 random words plus a 2-digit number, like Panther-Cobalt-Falcon-Harbor-18.
+- Copy-to-clipboard button. Suggest using a free password manager like Bitwarden.
+
+3. Scam Link Checker
+- User pastes a link someone sent them. Show red flags:
+  - Lookalike of a real gaming site (example: steamcommunlty.com instead of steamcommunity.com). Use string similarity against this list: discord.com, discord.gg, discordapp.com, steamcommunity.com, steampowered.com, playstation.com, xbox.com, microsoft.com, epicgames.com, roblox.com, twitch.tv, riotgames.com, ea.com
+  - A brand name (discord, steam, playstation, xbox, epic, roblox, nitro) inside a site that isn't the official one, like discord-nitro-gift.xyz
+  - Link shorteners (bit.ly, tinyurl.com, t.co, goo.gl, rb.gy, cutt.ly, is.gd)
+  - Risky domain endings (.ru, .xyz, .tk, .top, .gift, .click, .zip, .cf, .ga)
+  - Raw IP address instead of a site name
+  - http instead of https (only warn if the user actually typed http://)
+  - Bait words: free, nitro, gift, giveaway, claim, verify, login, skins, vbucks, robux
+  - An @ symbol used to hide the real destination
+- If it exactly matches an official site, say it looks legit but remind them to type addresses themselves instead of clicking.
+- Never visit or load the pasted link. Only analyze the text.
+
+4. Scam Message Checker
+- User pastes a DM. Flag these patterns with a plain-English explanation for each: free nitro, accidentally reported, steam gift, verify your account, send me your code, login code, free skins, free vbucks, free robux, giveaway, trade, urgent, your account will be banned, staff, qr code.
+
+5. Account Security Checkup
+- User picks a platform, then answers 7 yes/no questions:
+  1. Is 2FA on for this account?
+  2. Is this password used ONLY on this account?
+  3. Is your recovery email or phone up to date?
+  4. Is the email tied to this account also protected with 2FA?
+  5. Have you saved your 2FA backup codes somewhere safe?
+  6. Do you avoid logging in through links people send you?
+  7. Have you checked your logged-in devices in the last month?
+- Show a score as a percentage with a grade (SOLID 85%+, AT RISK 50 to 84%, HIGH RISK under 50%) and a ranked list of fixes for every "no."
+
+6. 2FA Setup Guides
+Step-by-step guides with a note that menus change and to look for "Security" or "2-Step" if a step looks different:
+- PlayStation: Settings or the PlayStation website > Account Management > Security > turn on 2-Step Verification > choose an authenticator app (best) or text > save backup codes.
+- Xbox: account.microsoft.com > Security > Advanced security options > turn on Two-step verification > use Microsoft Authenticator > save the recovery code.
+- Discord: User Settings > My Account > Enable Two-Factor Auth > scan the QR code with an authenticator app > download backup codes.
+- Steam: install the Steam Mobile app > sign in > Steam Guard > add the authenticator > write down the recovery code.
+- Epic Games: sign in at epicgames.com > Account > Password & Security > Two-Factor Authentication > turn on authenticator app (best), SMS, or email > save backup codes. Note that Epic often rewards 2FA with free in-game items in Fortnite.
+- Roblox: Settings (gear icon) > Security > turn on 2-Step Verification > choose an authenticator app (best) or email > save backup codes.
+Link each guide to that platform's official support page.
+
+DESIGN
+- Dark, gaming-inspired look that still feels clean and trustworthy, not like a scam site itself.
+- Big, clear buttons. Short sentences. No jargon without a quick explanation.
+- Results use clear colors: red for danger, yellow for caution, green for safe, plus icons or text so color isn't the only signal.
+
+ABOUT SECTION
+A short "Why I built this" section telling my story: I got hacked on PlayStation in middle school, nobody helped me, and that's why I'm studying cybersecurity. Signed: Sidney Nelms, Cybersecurity Major, South Carolina State University.
+
+Build it step by step, start with the home page and Password Check, and explain what each file does as you go.
