@@ -16,6 +16,7 @@ sends only a 5-character hash prefix.)
 | `messages.ts` | Scam Message Checker | `checkMessage(text)` returns a list of reasons; empty list = no scam phrases |
 | `checkup.ts` | Account Security Checkup | `CHECKUP_QUESTIONS`, `scoreCheckup(answers)` returns `{ percent, grade, fixes }` |
 | `guides.ts` | 2FA Setup Guides | `PLATFORMS`, `TWO_FA_GUIDES[platform]` gives `{ steps, helpUrl }`, `MENUS_CHANGE_NOTE` |
+| `passwordRules.ts` | Full generator page (`/generator/`) | `generateBatch(settings, n)`, `findProblems(settings)`, `estimateStrength(settings)`, `formatForCopy(pw, format)`, `applyPreset()`, `sanitizeSettings()` |
 | `wordlist.ts` | Passphrase words | `WORDS` (493 unique words, about 60 bits for 6 words) |
 
 Import everything from the folder:

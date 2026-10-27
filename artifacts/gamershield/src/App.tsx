@@ -4,7 +4,6 @@ import { ErrorBoundary } from '@/components/error-boundary';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
-import { GeneratorTool } from '@/components/tools/GeneratorTool';
 import { LinkTool } from '@/components/tools/LinkTool';
 import { MessageTool } from '@/components/tools/MessageTool';
 import { CheckupTool } from '@/components/tools/CheckupTool';
@@ -32,10 +31,10 @@ type BreachState =
   | { kind: 'unavailable' }
   | { kind: 'error' };
 
-type ToolId = 'generator' | 'link-check' | 'message-check' | 'checkup' | 'two-factor';
+type ToolId = 'link-check' | 'message-check' | 'checkup' | 'two-factor';
 
 interface ToolCard {
-  id: ToolId | 'password-check';
+  id: ToolId | 'password-check' | 'generator';
   title: string;
   description: string;
   icon: ComponentType<{ size?: number }>;
@@ -51,7 +50,6 @@ const TOOL_CARDS: ToolCard[] = [
 ];
 
 const TOOL_PANELS: Record<ToolId, ComponentType> = {
-  'generator': GeneratorTool,
   'link-check': LinkTool,
   'message-check': MessageTool,
   'checkup': CheckupTool,
@@ -62,7 +60,7 @@ function Home() {
   const [password, setPassword] = useState('');
   const [visible, setVisible] = useState(false);
   const [breach, setBreach] = useState<BreachState>({ kind: 'idle' });
-  const [activeTool, setActiveTool] = useState<ToolId>('generator');
+  const [activeTool, setActiveTool] = useState<ToolId>('link-check');
   const panelRef = useRef<HTMLDivElement>(null);
 
   function openTool(id: ToolId) {
@@ -255,10 +253,14 @@ function Home() {
                   <span className="gs-coming">{id === activeTool ? 'Open below' : 'Open tool'}</span>
                 </>
               );
-              // Password Check already lives in the hero, so its card just links up there.
-              return id === 'password-check'
-                ? <a className="gs-tool" href="#password-check" key={id} data-testid={`card-tool-${index + 1}`}>{body}</a>
-                : (
+              // Password Check lives in the hero, and the Generator has its own page, so those cards are links.
+              if (id === 'password-check') {
+                return <a className="gs-tool" href="#password-check" key={id} data-testid={`card-tool-${index + 1}`}>{body}</a>;
+              }
+              if (id === 'generator') {
+                return <a className="gs-tool" href={`${import.meta.env.BASE_URL}generator/`} key={id} data-testid={`card-tool-${index + 1}`}>{body}</a>;
+              }
+              return (
                   <button
                     type="button"
                     className="gs-tool"

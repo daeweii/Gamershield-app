@@ -26,7 +26,7 @@ export const DEFAULT_PASSPHRASE_WORDS = 6;
  * land on small numbers slightly more often. So we throw away the leftover
  * values at the top of the range and roll again.
  */
-function randomBelow(n: number): number {
+export function randomBelow(n: number): number {
   const limit = Math.floor(2 ** 32 / n) * n;
   const buffer = new Uint32Array(1);
   do {
@@ -52,7 +52,7 @@ export function generatePassword(length = DEFAULT_PASSWORD_LENGTH): string {
 }
 
 /** Pick `count` different words, like Python's random.sample(). */
-function sampleWords(count: number): string[] {
+export function sampleWords(count: number): string[] {
   const words = [...WORDS];
   // Partial Fisher-Yates shuffle: every ordering is equally likely.
   for (let i = 0; i < count; i++) {
