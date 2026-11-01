@@ -5,6 +5,9 @@
 // one entry. Icons are names (strings) so this file has no UI imports.
 // ---------------------------------------------------------------
 
+import { LESSONS } from '../../content/lessons.ts';
+import { LABS } from '../../content/labs.ts';
+
 export type CategoryId = 'password-security' | 'cryptography' | 'networking' | 'security-awareness';
 
 export type IconName =
@@ -114,8 +117,8 @@ export const SECTIONS: readonly Section[] = [
   { id: 'home', name: 'Home', path: '/', icon: 'home', summary: 'Your starting point: search, quick tools, and a daily tip.' },
   { id: 'dashboard', name: 'Dashboard', path: '/dashboard', icon: 'dashboard', summary: 'Your favorites, recent tools, and progress.' },
   ...CATEGORIES.map((c) => ({ id: c.id, name: c.name, path: `/${c.id}`, icon: c.icon, summary: c.summary })),
-  { id: 'learning', name: 'Learning Center', path: '/learning', icon: 'book', summary: 'Lessons, quizzes, and flashcards from beginner to Security+.', plannedPhase: 3 },
-  { id: 'labs', name: 'Cyber Labs', path: '/labs', icon: 'flask', summary: 'Hands-on simulated labs: logs, phishing, crypto, networking, and a safe terminal.', plannedPhase: 4 },
+  { id: 'learning', name: 'Learning Center', path: '/learning', icon: 'book', summary: 'Short lessons with flashcards and quizzes, starting with a Beginner path.' },
+  { id: 'labs', name: 'Cyber Labs', path: '/labs', icon: 'flask', summary: 'Hands-on simulated labs: phishing, log analysis, and a safe practice terminal.' },
   { id: 'settings', name: 'Settings', path: '/settings', icon: 'settings', summary: 'Theme, saved data, and privacy controls.' },
   { id: 'about', name: 'About', path: '/about', icon: 'info', summary: 'Why Sentrix exists and how it protects your privacy.' },
 ];
@@ -135,6 +138,8 @@ export function appRoutes(): string[] {
   return [
     ...SECTIONS.map((s) => s.path),
     ...TOOLS.filter((t) => t.status === 'ready' && !t.standalonePath).map((t) => `/${t.category}/${t.id}`),
+    ...LESSONS.map((l) => `/learning/${l.id}`),
+    ...LABS.filter((l) => l.status === 'ready').map((l) => `/labs/${l.id}`),
   ];
 }
 

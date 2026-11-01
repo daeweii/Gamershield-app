@@ -90,6 +90,10 @@ Only preferences, in `localStorage`, never anything typed into a tool:
 | `sentrix.theme.v1` | `light`, `dark`, or `system` |
 | `sentrix.sidebar.v1` | `collapsed` or `expanded` |
 | `sentrix.checklist.v1` | IDs of ticked Security Checklist items |
+| `sentrix.learning.v1` | Completed lesson IDs and best quiz scores (never quiz answers) |
+| `sentrix.labs.v1` | IDs of completed Cyber Labs |
+
+The Terminal Simulator never executes anything: commands are matched against a fixed table and answered from a fictional file system defined in code (`src/lib/labs/terminal.ts`), and tests confirm shell tricks like `;`, `&&`, and `$(...)` are treated as plain text.
 
 Saved values are treated as untrusted on read: unknown tool IDs, duplicates,
 and malformed data are dropped (`parseToolIds()` in

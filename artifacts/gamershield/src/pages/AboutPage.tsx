@@ -31,7 +31,7 @@ export function AboutPage() {
           <ul className="sx-list">
             {PRINCIPLES.map((p) => <li key={p}><CheckCircle2 size={17} aria-hidden="true" />{p}</li>)}
           </ul>
-          <a className="sx-btn" style={{ marginTop: 18 }} href="https://github.com/daeweii/Gamershield-app" target="_blank" rel="noopener noreferrer">
+          <a className="sx-btn" style={{ marginTop: 18 }} href="https://github.com/daeweii/Sentrix" target="_blank" rel="noopener noreferrer">
             View the code on GitHub <ExternalLink size={15} aria-hidden="true" />
           </a>
         </section>

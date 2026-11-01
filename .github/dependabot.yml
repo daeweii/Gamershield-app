@@ -13,6 +13,11 @@ updates:
     cooldown:
       default-days: 7
     open-pull-requests-limit: 5
+    # Major versions can break things; take them deliberately, not automatically.
+    # (Security updates still arrive for any version.)
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
     groups:
       # Batch routine minor and patch bumps into one PR to keep noise down.
       minor-and-patch:
