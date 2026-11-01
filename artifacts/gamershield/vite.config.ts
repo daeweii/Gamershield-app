@@ -1,7 +1,7 @@
 import path from 'path';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
-import { defineConfig } from 'vite';
+import { defineConfig, type Plugin } from 'vite';
 
 import runtimeErrorOverlay from '@replit/vite-plugin-runtime-error-modal';
 
@@ -27,12 +27,40 @@ if (!basePath) {
   );
 }
 
+// The password generator page gets a strict Content Security Policy in built
+// output: only this site's own scripts, styles, and files, and no outside
+// connections, so even injected code couldn't send a password anywhere.
+// Build-only because the dev server relies on inline scripts.
+const GENERATOR_CSP = [
+  "default-src 'none'",
+  "script-src 'self'",
+  "style-src 'self'",
+  "img-src 'self' data:",
+  "connect-src 'self'",
+  "manifest-src 'self'",
+  "worker-src 'self'",
+  "base-uri 'none'",
+  "form-action 'none'",
+].join('; ');
+
+function generatorSecurityHeaders(): Plugin {
+  return {
+    name: 'gamershield-generator-csp',
+    apply: 'build',
+    transformIndexHtml(html, ctx) {
+      if (!ctx.path.endsWith('/generator/index.html')) return html;
+      return [{ tag: 'meta', attrs: { 'http-equiv': 'Content-Security-Policy', content: GENERATOR_CSP }, injectTo: 'head-prepend' }];
+    },
+  };
+}
+
 export default defineConfig({
   base: basePath,
   plugins: [
     react(),
     tailwindcss(),
     runtimeErrorOverlay(),
+    generatorSecurityHeaders(),
     ...(process.env.NODE_ENV !== 'production' &&
     process.env.REPL_ID !== undefined
       ? [
@@ -63,6 +91,13 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, 'dist/public'),
     emptyOutDir: true,
+    rollupOptions: {
+      // Two pages: the main site and the standalone password generator.
+      input: {
+        main: path.resolve(import.meta.dirname, 'index.html'),
+        generator: path.resolve(import.meta.dirname, 'generator/index.html'),
+      },
+    },
   },
   server: {
     port,

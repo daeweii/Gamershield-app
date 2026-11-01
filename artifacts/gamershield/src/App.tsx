@@ -1,9 +1,13 @@
-import { useMemo, useState, type ReactNode } from 'react';
+import { useMemo, useRef, useState, type ComponentType, type ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
+import { LinkTool } from '@/components/tools/LinkTool';
+import { MessageTool } from '@/components/tools/MessageTool';
+import { CheckupTool } from '@/components/tools/CheckupTool';
+import { TwoFactorTool } from '@/components/tools/TwoFactorTool';
 import { AlertTriangle, Check, ClipboardCheck, Eye, EyeOff, Fingerprint, Gamepad2, KeyRound, Link2, LockKeyhole, MessageSquareWarning, ShieldCheck } from 'lucide-react';
 import {
   Route,
@@ -27,10 +31,45 @@ type BreachState =
   | { kind: 'unavailable' }
   | { kind: 'error' };
 
+type ToolId = 'link-check' | 'message-check' | 'checkup' | 'two-factor';
+
+interface ToolCard {
+  id: ToolId | 'password-check' | 'generator';
+  title: string;
+  description: string;
+  icon: ComponentType<{ size?: number }>;
+}
+
+const TOOL_CARDS: ToolCard[] = [
+  { id: 'password-check', title: 'Password Check', description: 'Estimate strength and optionally check known breach data.', icon: ShieldCheck },
+  { id: 'generator', title: 'Password Generator', description: 'Create a strong password or an easy-to-remember passphrase.', icon: KeyRound },
+  { id: 'link-check', title: 'Scam Link Checker', description: 'Look for suspicious domains and common gaming bait.', icon: Link2 },
+  { id: 'message-check', title: 'Scam Message Checker', description: 'Spot pressure tactics and common scam messages.', icon: MessageSquareWarning },
+  { id: 'checkup', title: 'Account Security Checkup', description: 'Get a score and prioritized steps to protect an account.', icon: ClipboardCheck },
+  { id: 'two-factor', title: '2FA Setup Guides', description: 'Follow platform-specific steps to add another layer of security.', icon: Fingerprint },
+];
+
+const TOOL_PANELS: Record<ToolId, ComponentType> = {
+  'link-check': LinkTool,
+  'message-check': MessageTool,
+  'checkup': CheckupTool,
+  'two-factor': TwoFactorTool,
+};
+
 function Home() {
   const [password, setPassword] = useState('');
   const [visible, setVisible] = useState(false);
   const [breach, setBreach] = useState<BreachState>({ kind: 'idle' });
+  const [activeTool, setActiveTool] = useState<ToolId>('link-check');
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  function openTool(id: ToolId) {
+    setActiveTool(id);
+    // On phones the panel is below six stacked cards, so bring it into view.
+    requestAnimationFrame(() => panelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+  }
+
+  const ActivePanel = TOOL_PANELS[activeTool];
 
   // This score is a local estimate only. It does not predict every attack.
   const assessment = useMemo(() => {
@@ -97,14 +136,6 @@ function Home() {
   }
 
   const scoreClass = assessment.level.toLowerCase();
-  const checks = [
-    { title: 'Password Check', description: 'Estimate strength and optionally check known breach data.', icon: ShieldCheck, ready: true },
-    { title: 'Password Generator', description: 'Create a strong password or an easy-to-remember passphrase.', icon: KeyRound },
-    { title: 'Scam Link Checker', description: 'Look for suspicious domains and common gaming bait.', icon: Link2 },
-    { title: 'Scam Message Checker', description: 'Spot pressure tactics and common scam messages.', icon: MessageSquareWarning },
-    { title: 'Account Security Checkup', description: 'Get a score and prioritized steps to protect an account.', icon: ClipboardCheck },
-    { title: '2FA Setup Guides', description: 'Follow platform-specific steps to add another layer of security.', icon: Fingerprint },
-  ];
 
   return (
     <main className="gs-shell">
@@ -210,19 +241,42 @@ function Home() {
         <section className="gs-section" id="tools" aria-labelledby="tools-title">
           <div className="gs-section-top">
             <div><div className="gs-kicker">More account safety</div><h2 id="tools-title">Small tools. Clear answers.</h2></div>
-            <p className="gs-section-intro">Password Check is ready now. The other tools are still being built and are not active yet.</p>
+            <p className="gs-section-intro">Pick a tool. All six run right here on your device, and nothing you type is saved or sent to GamerShield.</p>
           </div>
           <div className="gs-tools">
-            {checks.map(({ title, description, icon: Icon, ready }, index) => (
-              <article className={`gs-tool${ready ? ' gs-tool-active' : ''}`} key={title} data-testid={`card-tool-${index + 1}`}>
-                <span className="gs-tool-icon"><Icon size={17} /></span>
-                <h3>{title}</h3>
-                <p>{description}</p>
-                {ready
-                  ? <a className="gs-coming gs-tool-link" href="#password-check" data-testid="link-open-password-check">Open tool</a>
-                  : <span className="gs-coming">Coming soon</span>}
-              </article>
-            ))}
+            {TOOL_CARDS.map(({ id, title, description, icon: Icon }, index) => {
+              const body = (
+                <>
+                  <span className="gs-tool-icon"><Icon size={17} /></span>
+                  <h3>{title}</h3>
+                  <p>{description}</p>
+                  <span className="gs-coming">{id === activeTool ? 'Open below' : 'Open tool'}</span>
+                </>
+              );
+              // Password Check lives in the hero, and the Generator has its own page, so those cards are links.
+              if (id === 'password-check') {
+                return <a className="gs-tool" href="#password-check" key={id} data-testid={`card-tool-${index + 1}`}>{body}</a>;
+              }
+              if (id === 'generator') {
+                return <a className="gs-tool" href={`${import.meta.env.BASE_URL}generator/`} key={id} data-testid={`card-tool-${index + 1}`}>{body}</a>;
+              }
+              return (
+                  <button
+                    type="button"
+                    className="gs-tool"
+                    key={id}
+                    aria-pressed={id === activeTool}
+                    aria-controls="tool-panel"
+                    onClick={() => openTool(id)}
+                    data-testid={`card-tool-${index + 1}`}
+                  >
+                    {body}
+                  </button>
+                );
+            })}
+          </div>
+          <div id="tool-panel" ref={panelRef} className="gs-tool-panel-wrap">
+            <ActivePanel />
           </div>
         </section>
 
