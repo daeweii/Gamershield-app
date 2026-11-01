@@ -4,7 +4,8 @@ import {
   estimateStrength, findProblems, formatForCopy, generateBatch, isValidEnvName,
   type CopyFormat, type GeneratorSettings,
 } from '@/lib/security';
-import { clearPrefs, DEFAULT_PREFS, loadPrefs, savePrefs, type Prefs } from './prefs';
+import { writeClipboard } from '@/lib/platform/clipboard';
+import { clearPrefs, DEFAULT_PREFS, loadPrefs, savePrefs, withModeFromUrl, type Prefs } from './prefs';
 import { strings } from './strings';
 import { GenerateSection } from './GenerateSection';
 import { CustomizeSection } from './CustomizeSection';
@@ -29,34 +30,8 @@ function makeBatch(settings: GeneratorSettings, size: number): Batch | null {
 
 export type CopyStatus = { index: number; state: 'copied' | 'failed' } | null;
 
-/**
- * Copy text to the clipboard. Tries the modern Clipboard API first. Some
- * browsers and embedded views deny it, so fall back to the older copy command
- * on a temporary off-screen text box, which is removed immediately.
- */
-async function writeClipboard(text: string): Promise<void> {
-  try {
-    await navigator.clipboard.writeText(text);
-    return;
-  } catch {
-    // Fall through to the legacy method.
-  }
-  const box = document.createElement('textarea');
-  box.value = text;
-  box.setAttribute('readonly', '');
-  box.setAttribute('aria-hidden', 'true');
-  box.className = 'pg-offscreen';
-  const focused = document.activeElement;
-  document.body.appendChild(box);
-  box.select();
-  const copied = document.execCommand('copy');
-  box.remove();
-  if (focused instanceof HTMLElement) focused.focus();
-  if (!copied) throw new Error('Copy was blocked');
-}
-
 export function GeneratorApp() {
-  const [prefs, setPrefs] = useState<Prefs>(loadPrefs);
+  const [prefs, setPrefs] = useState<Prefs>(() => withModeFromUrl(loadPrefs()));
   const [section, setSection] = useState<SectionId>('generate');
   const [batch, setBatch] = useState<Batch | null>(() => makeBatch(prefs.settings, prefs.batchSize));
   const [revealed, setRevealed] = useState<boolean[]>(() => (batch ? batch.passwords.map(() => false) : []));

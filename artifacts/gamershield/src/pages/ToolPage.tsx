@@ -13,6 +13,18 @@ const TOOL_COMPONENTS: Record<string, LazyExoticComponent<ComponentType>> = {
   'link-checker': lazy(() => import('@/components/tools/LinkTool').then((m) => ({ default: m.LinkTool }))),
   'message-checker': lazy(() => import('@/components/tools/MessageTool').then((m) => ({ default: m.MessageTool }))),
   'account-checkup': lazy(() => import('@/components/tools/CheckupTool').then((m) => ({ default: m.CheckupTool }))),
+  'password-guide': lazy(() => import('@/components/tools/GuideTool').then((m) => ({ default: m.PasswordGuideTool }))),
+  'hash-generator': lazy(() => import('@/components/tools/HashTool').then((m) => ({ default: m.HashTool }))),
+  'base64': lazy(() => import('@/components/tools/Base64Tool').then((m) => ({ default: m.Base64Tool }))),
+  'encryption': lazy(() => import('@/components/tools/EncryptionTool').then((m) => ({ default: m.EncryptionTool }))),
+  'file-hash': lazy(() => import('@/components/tools/FileHashTool').then((m) => ({ default: m.FileHashTool }))),
+  'ip-info': lazy(() => import('@/components/tools/IpInfoTool').then((m) => ({ default: m.IpInfoTool }))),
+  'dns-lookup': lazy(() => import('@/components/tools/DnsTool').then((m) => ({ default: m.DnsTool }))),
+  'subnet-calculator': lazy(() => import('@/components/tools/SubnetTool').then((m) => ({ default: m.SubnetTool }))),
+  'network-terms': lazy(() => import('@/components/tools/NetworkTermsTool').then((m) => ({ default: m.NetworkTermsTool }))),
+  'url-inspector': lazy(() => import('@/components/tools/UrlInspectorTool').then((m) => ({ default: m.UrlInspectorTool }))),
+  'security-checklist': lazy(() => import('@/components/tools/ChecklistTool').then((m) => ({ default: m.ChecklistTool }))),
+  'file-safety': lazy(() => import('@/components/tools/GuideTool').then((m) => ({ default: m.FileSafetyTool }))),
 };
 
 export const hasToolPage = (id: string) => id in TOOL_COMPONENTS;

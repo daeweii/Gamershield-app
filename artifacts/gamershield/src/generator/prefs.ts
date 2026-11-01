@@ -3,8 +3,8 @@
 // so every read is wrapped in try/catch and run through sanitizeSettings().
 
 import {
-  COPY_FORMATS, DEFAULT_SETTINGS, LIMITS, isValidEnvName, sanitizeSettings,
-  type CopyFormat, type GeneratorSettings,
+  COPY_FORMATS, DEFAULT_SETTINGS, LIMITS, MODES, isValidEnvName, sanitizeSettings,
+  type CopyFormat, type GeneratorSettings, type Mode,
 } from '@/lib/security';
 
 const STORAGE_KEY = 'gamershield.generator.prefs.v1';
@@ -41,6 +41,15 @@ export function loadPrefs(): Prefs {
   } catch {
     return DEFAULT_PREFS;
   }
+}
+
+/**
+ * A link like generator/?mode=passphrase opens a specific mode for this visit.
+ * Only known modes are accepted, and nothing is saved until the user changes a setting.
+ */
+export function withModeFromUrl(prefs: Prefs, search = window.location.search): Prefs {
+  const mode = new URLSearchParams(search).get('mode');
+  return MODES.includes(mode as Mode) ? { ...prefs, settings: { ...prefs.settings, mode: mode as Mode } } : prefs;
 }
 
 export function savePrefs(prefs: Prefs): void {

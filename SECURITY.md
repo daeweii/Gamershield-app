@@ -89,11 +89,40 @@ Only preferences, in `localStorage`, never anything typed into a tool:
 | `sentrix.recent.v1` | IDs of the last 6 tools opened |
 | `sentrix.theme.v1` | `light`, `dark`, or `system` |
 | `sentrix.sidebar.v1` | `collapsed` or `expanded` |
+| `sentrix.checklist.v1` | IDs of ticked Security Checklist items |
 
 Saved values are treated as untrusted on read: unknown tool IDs, duplicates,
 and malformed data are dropped (`parseToolIds()` in
 `src/lib/platform/storage.ts`, covered by tests). **Settings → Reset
 everything** removes all of these plus the generator's preferences.
+
+## Outside services
+Sentrix has no backend. Three tools contact a public service, each only when
+the user presses a button, and each tool says so next to that button:
+
+| Tool | Service | What is sent | What the service sees |
+|---|---|---|---|
+| Password Strength Checker (breach check) | `api.pwnedpasswords.com` | First 5 hex characters of the password's SHA-1 hash | That prefix and your IP. Never the password or full hash (k-anonymity, with response padding). |
+| DNS Lookup | `cloudflare-dns.com` (DNS-over-HTTPS) | The domain name and record type | The domain and your IP, like any DNS resolver |
+| IP Information ("Show my public IP") | `api.ipify.org` | An empty request | Your IP (which it echoes back). No location lookup. |
+
+All three requests omit cookies (`credentials: 'omit'`) and the DNS and IP requests
+send no referrer. Every other tool runs entirely on the device: hashing, Base64,
+encryption, file hashing, subnet math, IP analysis, URL inspection, and the
+link and message checkers.
+
+## Encryption tool
+The Encryption & Decryption tool is educational but uses real, standard
+cryptography through Web Crypto: PBKDF2-SHA-256 with 600,000 iterations
+(OWASP's recommendation) and a random 16-byte salt derives a non-extractable
+AES-256 key; AES-GCM with a random 12-byte IV encrypts and authenticates the
+text. Output is `SNTX1.` + Base64(salt, IV, ciphertext + tag). Limits: security
+depends on passphrase strength, there is no recovery, and the key exists in
+browser memory while the page is open. No custom cryptography is used anywhere.
+
+## File hashing
+Files are read with the File API and hashed in memory; they are never
+uploaded. Files over 1 GB are refused to avoid freezing the tab.
 
 ## Rest of the site
 - The Password Check hashes the password with SHA-1 in the browser and sends

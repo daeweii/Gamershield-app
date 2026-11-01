@@ -64,8 +64,19 @@ test('search finds sections and requires every word to match', () => {
 });
 
 test('search never returns planned tools', () => {
-  assert.ok(!searchPlatform('hash').some((r) => r.kind === 'tool' && r.item.status !== 'ready'));
-  assert.ok(searchPlatform('subnet').every((r) => r.kind === 'section'));
+  for (const tool of TOOLS) {
+    assert.ok(!searchPlatform(tool.name).some((r) => r.kind === 'tool' && r.item.status !== 'ready'), tool.id);
+  }
+});
+
+test('search finds the Phase 2 tools', () => {
+  assert.equal(searchPlatform('sha256')[0].item.id, 'hash-generator');
+  assert.equal(searchPlatform('subnet')[0].item.id, 'subnet-calculator');
+  assert.equal(searchPlatform('base64')[0].item.id, 'base64');
+  assert.ok(searchPlatform('aes').some((r) => r.item.id === 'encryption'));
+  assert.ok(searchPlatform('mx').some((r) => r.item.id === 'dns-lookup'));
+  assert.ok(searchPlatform('checksum').some((r) => r.item.id === 'file-hash'));
+  assert.ok(searchPlatform('passphrase').some((r) => r.item.id === 'passphrase-generator'));
 });
 
 // ---------------- saved data ----------------

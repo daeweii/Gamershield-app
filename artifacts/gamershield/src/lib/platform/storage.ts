@@ -11,6 +11,8 @@ export const STORAGE_KEYS = {
   recent: 'sentrix.recent.v1',
   theme: 'sentrix.theme.v1',
   sidebar: 'sentrix.sidebar.v1',
+  /** IDs of ticked Security Checklist items. */
+  checklist: 'sentrix.checklist.v1',
   /** Owned by the password generator page; listed so "reset everything" clears it too. */
   generatorPrefs: 'gamershield.generator.prefs.v1',
 } as const;
@@ -25,6 +27,18 @@ export function parseToolIds(raw: string | null, max = Infinity): string[] {
     if (!Array.isArray(value)) return [];
     const ids = value.filter((id): id is string => typeof id === 'string' && TOOL_IDS.has(id));
     return [...new Set(ids)].slice(0, max);
+  } catch {
+    return [];
+  }
+}
+
+/** Parse saved IDs from any allowed set (used for checklist progress). */
+export function parseIdList(raw: string | null, allowed: ReadonlySet<string>): string[] {
+  if (!raw) return [];
+  try {
+    const value: unknown = JSON.parse(raw);
+    if (!Array.isArray(value)) return [];
+    return [...new Set(value.filter((id): id is string => typeof id === 'string' && allowed.has(id)))];
   } catch {
     return [];
   }

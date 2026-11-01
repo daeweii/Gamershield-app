@@ -8,6 +8,9 @@ import { Icon } from '@/components/sentrix/Icon';
 import { SearchDialog } from '@/components/sentrix/SearchDialog';
 import { ToolCard } from '@/components/sentrix/ToolCard';
 
+// A short, mixed starter set keeps the home page uncluttered; categories and search reach the rest.
+const FEATURED = ['strength-checker', 'password-generator', 'link-checker', 'hash-generator', 'dns-lookup', 'subnet-calculator'];
+
 function ToolChip({ tool }: { tool: Tool }) {
   const href = toolHref(tool);
   const body = <><Icon name={tool.icon} size={16} />{tool.name}</>;
@@ -65,9 +68,9 @@ export function HomePage() {
       <section className="sx-section" aria-labelledby="quick-heading">
         <div className="sx-section-head">
           <h2 id="quick-heading">Quick access</h2>
-          <p>Star a tool to pin it to your favorites.</p>
+          <p>{READY_TOOLS.length} tools in all. Star one to pin it to your favorites.</p>
         </div>
-        <div className="sx-grid">{READY_TOOLS.map((tool) => <ToolCard key={tool.id} tool={tool} showCategory />)}</div>
+        <div className="sx-grid">{FEATURED.map(findTool).filter((t): t is Tool => !!t).map((tool) => <ToolCard key={tool.id} tool={tool} showCategory />)}</div>
       </section>
 
       <div className="sx-grid-2 sx-section">

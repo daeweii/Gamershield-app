@@ -1,5 +1,5 @@
 import { Link } from 'wouter';
-import { READY_TOOLS, TOOLS, findTool, type Tool } from '@/lib/platform/registry';
+import { CATEGORIES, READY_TOOLS, findTool, type Tool } from '@/lib/platform/registry';
 import { useSentrix } from '@/hooks/use-sentrix';
 import { EmptyState, PageHeader, ToolCard } from '@/components/sentrix/ToolCard';
 
@@ -16,7 +16,7 @@ export function DashboardPage() {
         <div className="sx-stat" role="listitem"><b>{READY_TOOLS.length}</b><span>Tools ready to use</span></div>
         <div className="sx-stat" role="listitem"><b>{favoriteTools.length}</b><span>Favorites</span></div>
         <div className="sx-stat" role="listitem"><b>{recentTools.length}</b><span>Recently used</span></div>
-        <div className="sx-stat" role="listitem"><b>{TOOLS.length - READY_TOOLS.length}</b><span>Tools on the roadmap</span></div>
+        <div className="sx-stat" role="listitem"><b>{CATEGORIES.length}</b><span>Toolkit categories</span></div>
       </div>
 
       <section className="sx-section" aria-labelledby="dash-fav">
