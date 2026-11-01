@@ -132,9 +132,6 @@ uploaded. Files over 1 GB are refused to avoid freezing the tab.
 - User input is always rendered as text by React, never as HTML.
 
 ## Known limitations
-- The Replit template includes an unused Express server (`artifacts/api-server`)
-  and database package (`lib/db`). The site doesn't use them; they should be
-  removed before public deployment.
 - The Content Security Policy is set with a `<meta>` tag, so it can't include
   `frame-ancestors`. Set real HTTP headers if the host allows it.
 
