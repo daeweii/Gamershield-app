@@ -1,8 +1,8 @@
 # Security
 
-GamerShield is built so that nothing you type leaves your device. This file
-explains how that works, for the whole site and in detail for the password
-generator page (`/generator/`).
+Sentrix (formerly GamerShield) is built so that nothing you type leaves your
+device. This file explains how that works, for the whole site and in detail
+for the password generator page (`/generator/`).
 
 ## Password generator
 
@@ -79,6 +79,21 @@ off by default.
 - **.env line:** `NAME="value"` with shell-style double-quote escaping of
   `\`, `"`, `$`, and `` ` ``. Shells, Docker Compose, and python-dotenv read
   this back exactly; some other `.env` parsers handle escapes differently.
+
+## What the main app saves
+Only preferences, in `localStorage`, never anything typed into a tool:
+
+| Key | Contents |
+|---|---|
+| `sentrix.favorites.v1` | IDs of starred tools |
+| `sentrix.recent.v1` | IDs of the last 6 tools opened |
+| `sentrix.theme.v1` | `light`, `dark`, or `system` |
+| `sentrix.sidebar.v1` | `collapsed` or `expanded` |
+
+Saved values are treated as untrusted on read: unknown tool IDs, duplicates,
+and malformed data are dropped (`parseToolIds()` in
+`src/lib/platform/storage.ts`, covered by tests). **Settings → Reset
+everything** removes all of these plus the generator's preferences.
 
 ## Rest of the site
 - The Password Check hashes the password with SHA-1 in the browser and sends

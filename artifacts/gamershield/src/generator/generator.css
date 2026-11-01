@@ -4,7 +4,12 @@
 
 :root {
   --pg-red: #c8102e;        /* 5.9:1 on white */
-  --pg-red-dark: #9e0c24;
+  --pg-red-dark: #9e0c24;   /* red text on white */
+  --pg-red-hover: #9e0c24;
+  --pg-on-red: #ffffff;
+  --pg-problem-bg: #fff5f6;
+  --pg-radius: 12px;
+  --pg-radius-lg: 18px;
   --pg-ink: #111111;
   --pg-muted: #4a4a4a;      /* 8.9:1 on white */
   --pg-line: #111111;
@@ -39,14 +44,14 @@ h1, h2, h3, p { margin: 0; }
 .pg-title-row { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; padding: 28px 0 20px; }
 .pg-title { font-size: clamp(40px, 9vw, 84px); line-height: .9; font-weight: 900; letter-spacing: -.045em; text-transform: uppercase; }
 .pg-title-kicker { display: block; margin-bottom: 10px; color: var(--pg-red); font-size: 14px; letter-spacing: .2em; line-height: 1; }
-.pg-badge { padding: 8px 12px; background: var(--pg-red); color: var(--pg-white); font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.pg-badge { padding: 8px 12px; background: var(--pg-red); color: var(--pg-on-red); font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
 
 /* Tabs */
 .pg-tabs { display: flex; gap: 0; overflow-x: auto; border-top: 2px solid var(--pg-line); border-bottom: 2px solid var(--pg-line); scrollbar-width: none; }
 .pg-tab { flex: 1 0 auto; padding: 14px 16px; border: 0; border-right: 2px solid var(--pg-line); background: var(--pg-white); font-size: 14px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; cursor: pointer; }
 .pg-tab:last-child { border-right: 0; }
 .pg-tab:hover { background: var(--pg-soft); }
-.pg-tab[aria-selected='true'] { background: var(--pg-red); color: var(--pg-white); }
+.pg-tab[aria-selected='true'] { background: var(--pg-red); color: var(--pg-on-red); }
 .pg-tab:focus-visible { outline-offset: -5px; box-shadow: none; outline-color: var(--pg-ink); }
 
 /* Sections */
@@ -67,8 +72,8 @@ h3 { margin: 22px 0 8px; font-size: 15px; font-weight: 900; letter-spacing: .06e
 /* Buttons */
 .pg-button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 10px 16px; border: 2px solid var(--pg-ink); background: var(--pg-white); color: var(--pg-ink); font-size: 14px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; cursor: pointer; transition: background .15s ease, color .15s ease; }
 .pg-button:hover:not(:disabled) { background: var(--pg-ink); color: var(--pg-white); }
-.pg-button-primary { border-color: var(--pg-red); background: var(--pg-red); color: var(--pg-white); }
-.pg-button-primary:hover:not(:disabled) { border-color: var(--pg-red-dark); background: var(--pg-red-dark); }
+.pg-button-primary { border-color: var(--pg-red); background: var(--pg-red); color: var(--pg-on-red); }
+.pg-button-primary:hover:not(:disabled) { border-color: var(--pg-red-hover); background: var(--pg-red-hover); }
 .pg-button-quiet { border-color: transparent; background: transparent; text-decoration: underline; text-underline-offset: 3px; }
 .pg-button-quiet:hover:not(:disabled) { border-color: var(--pg-ink); }
 .pg-button:disabled { cursor: not-allowed; opacity: .45; }
@@ -105,7 +110,7 @@ h3 { margin: 22px 0 8px; font-size: 15px; font-weight: 900; letter-spacing: .06e
 
 /* Notices and errors */
 .pg-notice { margin-top: 14px; padding: 12px 14px; border-left: 6px solid var(--pg-ink); background: var(--pg-soft); font-size: 14px; }
-.pg-problems { margin-top: 16px; padding: 14px 16px; border: 2px solid var(--pg-red); background: #fff5f6; }
+.pg-problems { margin-top: 16px; padding: 14px 16px; border: 2px solid var(--pg-red); background: var(--pg-problem-bg); }
 .pg-problems-title { display: flex; align-items: center; gap: 8px; color: var(--pg-red-dark); font-weight: 900; text-transform: uppercase; letter-spacing: .06em; font-size: 14px; }
 .pg-problems ul { margin: 8px 0 12px; padding-left: 20px; }
 .pg-problems li + li { margin-top: 6px; }
@@ -119,8 +124,8 @@ h3 { margin: 22px 0 8px; font-size: 15px; font-weight: 900; letter-spacing: .06e
 .pg-mode input { position: absolute; opacity: 0; }
 .pg-mode-name { font-size: 17px; font-weight: 900; text-transform: uppercase; letter-spacing: .02em; }
 .pg-mode-hint { color: var(--pg-muted); font-size: 13px; line-height: 1.4; }
-.pg-mode:has(input:checked) { border-color: var(--pg-red); background: var(--pg-red); color: var(--pg-white); }
-.pg-mode:has(input:checked) .pg-mode-hint { color: var(--pg-white); }
+.pg-mode:has(input:checked) { border-color: var(--pg-red); background: var(--pg-red); color: var(--pg-on-red); }
+.pg-mode:has(input:checked) .pg-mode-hint { color: var(--pg-on-red); }
 .pg-mode:has(input:focus-visible) { outline: 3px solid var(--pg-ink); outline-offset: 3px; }
 .pg-presets { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 20px; }
 .pg-presets .pg-label { width: 100%; }
@@ -148,7 +153,7 @@ h3 { margin: 22px 0 8px; font-size: 15px; font-weight: 900; letter-spacing: .06e
 .pg-strength-card { margin-top: 18px; }
 .pg-strength-score { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 14px; margin: 6px 0 10px; font-size: 22px; font-weight: 800; }
 .pg-verdict { padding: 2px 10px; color: var(--pg-white); font-size: 14px; letter-spacing: .1em; text-transform: uppercase; }
-.pg-verdict-weak { background: var(--pg-red); }
+.pg-verdict-weak { background: var(--pg-red); color: var(--pg-on-red); }
 .pg-verdict-okay { background: var(--pg-okay); }
 .pg-verdict-strong { background: var(--pg-strong); }
 .pg-meter { height: 14px; border: 2px solid var(--pg-ink); background: var(--pg-white); }
@@ -186,4 +191,37 @@ h3 { margin: 22px 0 8px; font-size: 15px; font-weight: 900; letter-spacing: .06e
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+}
+
+/* ---------- Sentrix design system ----------
+   Dark theme (follows the theme chosen in Sentrix Settings) and the shared
+   rounded-corner look. Kept at the end so it layers over the base styles. */
+html.dark {
+  --pg-red: #e11d3c;
+  --pg-red-dark: #ff6b7f;   /* red text on dark surfaces */
+  --pg-red-hover: #f0304e;
+  --pg-ink: #f4f4f5;
+  --pg-muted: #a6a6b0;
+  --pg-line: #3a3a43;
+  --pg-soft: #1b1b1f;
+  --pg-white: #141417;
+  --pg-okay: #fbbf24;
+  --pg-strong: #4ade80;
+  --pg-problem-bg: rgba(225, 29, 60, 0.12);
+  color-scheme: dark;
+}
+html.dark body { background: #0b0b0d; }
+
+.pg-button, .pg-icon-button, .pg-field input[type='text'], .pg-field input[type='number'], .pg-field select, .pg-skip, .pg-preview code { border-radius: var(--pg-radius); }
+.pg-chip, .pg-badge, .pg-verdict, .pg-meter, .pg-meter-fill { border-radius: 999px; }
+.pg-choice, .pg-strength-card, .pg-toolbar, .pg-mode, .pg-details, .pg-problems, .pg-tour, .pg-callout, .pg-notice { border-radius: var(--pg-radius-lg); }
+.pg-tabs { border: 2px solid var(--pg-line); border-radius: var(--pg-radius-lg); overflow: hidden; }
+.pg-segment label:first-of-type span { border-radius: var(--pg-radius) 0 0 var(--pg-radius); }
+.pg-segment label:last-of-type span { border-radius: 0 var(--pg-radius) var(--pg-radius) 0; }
+.pg-header-inner { border-bottom-width: 1px; }
+.pg-tour { box-shadow: 0 18px 48px rgba(0, 0, 0, .25), 6px 6px 0 var(--pg-red); }
+@media (max-width: 760px) {
+  .pg-segment label span, .pg-segment label:first-of-type span, .pg-segment label:last-of-type span { border-radius: 0; }
+  .pg-segment label:first-of-type span { border-radius: var(--pg-radius) 0 0 var(--pg-radius); }
+  .pg-segment label:last-of-type span { border-radius: 0 var(--pg-radius) var(--pg-radius) 0; }
 }

@@ -8,4 +8,5 @@ export * from './messages.ts';
 export * from './checkup.ts';
 export * from './guides.ts';
 export * from './passwordRules.ts';
+export * from './passwordCheck.ts';
 export { WORDS } from './wordlist.ts';

@@ -1,6 +1,10 @@
 import { createRoot } from 'react-dom/client';
+import { startTheme } from '@/lib/platform/themeDom';
 import { GeneratorApp } from './GeneratorApp';
 import './generator.css';
+
+// Same light/dark theme the user picked in Sentrix.
+startTheme();
 
 createRoot(document.getElementById('root')!).render(<GeneratorApp />);
 
