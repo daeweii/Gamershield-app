@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { LockKeyhole, MessageSquareWarning, Search } from 'lucide-react';
 import { checkMessage } from '@/lib/security';
+import { SAMPLE_MESSAGES } from '@/content/guides';
 import { ToolPanel } from './ToolPanel';
 
 export function MessageTool() {
@@ -26,6 +27,14 @@ export function MessageTool() {
           spellCheck={false}
           data-testid="input-message"
         />
+        <div className="gs-sample-row" role="group" aria-label="Practice with a fictional sample message">
+          <span className="gs-hint" style={{ margin: 0, alignSelf: 'center' }}>Try a sample:</span>
+          {SAMPLE_MESSAGES.map((sample) => (
+            <button key={sample.label} type="button" className="gs-chip" onClick={() => { setMessage(sample.text); setHits(checkMessage(sample.text)); }}>
+              {sample.label}
+            </button>
+          ))}
+        </div>
         <button type="submit" className="gs-breach" disabled={!message.trim()} data-testid="button-check-message">
           <Search size={16} /> Check message
         </button>

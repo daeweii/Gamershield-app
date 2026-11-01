@@ -8,8 +8,8 @@ const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one :
 
 export const strings = {
   pageTitle: 'Password Generator',
-  brand: 'GamerShield',
-  backToSite: 'Back to GamerShield',
+  brand: 'Sentrix',
+  backToSite: 'Back to Sentrix',
   onDevice: 'Generated on this device',
   tourButton: 'Quick tour',
 
@@ -153,7 +153,7 @@ export const strings = {
     nist: [
       'Length is the biggest factor. NIST SP 800-63B asks sites to require at least 15 characters when a password is the only login step.',
       'Sites should accept at least 64 characters and shouldn’t force mixes of character types.',
-      'Sites should block passwords found in data breaches. GamerShield’s Password Check can test for that.',
+      'Sites should block passwords found in data breaches. Sentrix’s Password Strength Checker can test for that.',
     ],
     nistLink: 'Read NIST SP 800-63B',
     pinWarning: 'PINs are short by design. They’re fine where a device locks after a few wrong tries, but never for an online account.',

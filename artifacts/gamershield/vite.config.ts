@@ -1,3 +1,4 @@
+import { copyFileSync } from 'fs';
 import path from 'path';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
@@ -54,6 +55,19 @@ function generatorSecurityHeaders(): Plugin {
   };
 }
 
+// GitHub Pages serves 404.html for any path it doesn't have as a file, so
+// a copy of the app there lets deep links like /settings work on refresh.
+// (Replit's static hosting already rewrites unknown paths to index.html.)
+function spaFallbackPage(): Plugin {
+  let outDir = '';
+  return {
+    name: 'sentrix-spa-fallback',
+    apply: 'build',
+    configResolved(config) { outDir = config.build.outDir; },
+    closeBundle() { copyFileSync(path.join(outDir, 'index.html'), path.join(outDir, '404.html')); },
+  };
+}
+
 export default defineConfig({
   base: basePath,
   plugins: [
@@ -61,6 +75,7 @@ export default defineConfig({
     tailwindcss(),
     runtimeErrorOverlay(),
     generatorSecurityHeaders(),
+    spaFallbackPage(),
     ...(process.env.NODE_ENV !== 'production' &&
     process.env.REPL_ID !== undefined
       ? [
