@@ -6,17 +6,20 @@ import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { AppShell } from '@/components/sentrix/AppShell';
 import { PageHeader } from '@/components/sentrix/ToolCard';
-import { SECTIONS, findCategory, findTool } from '@/lib/platform/registry';
+import { findCategory, findTool } from '@/lib/platform/registry';
 import { HomePage } from '@/pages/HomePage';
 import { DashboardPage } from '@/pages/DashboardPage';
 import { CategoryPage } from '@/pages/CategoryPage';
 import { ToolPage, hasToolPage } from '@/pages/ToolPage';
-import { PlannedSectionPage } from '@/pages/PlannedSectionPage';
 import { SettingsPage } from '@/pages/SettingsPage';
 import { AboutPage } from '@/pages/AboutPage';
+import { LearningPage } from '@/pages/LearningPage';
+import { LessonPage } from '@/pages/LessonPage';
+import { findLesson } from '@/content/lessons';
+import { LabPage, LabsPage, hasLabPage } from '@/pages/LabsPage';
+import { findLab } from '@/content/labs';
 
 const queryClient = new QueryClient();
-const section = (id: string) => SECTIONS.find((s) => s.id === id)!;
 
 function NotFound() {
   return (
@@ -35,8 +38,20 @@ function Routes() {
     <Switch>
       <Route path="/" component={HomePage} />
       <Route path="/dashboard" component={DashboardPage} />
-      <Route path="/learning">{() => <PlannedSectionPage section={section('learning')} />}</Route>
-      <Route path="/labs">{() => <PlannedSectionPage section={section('labs')} />}</Route>
+      <Route path="/learning" component={LearningPage} />
+      <Route path="/learning/:lesson">
+        {({ lesson }) => {
+          const found = findLesson(lesson);
+          return found ? <LessonPage key={found.id} lesson={found} /> : <NotFound />;
+        }}
+      </Route>
+      <Route path="/labs" component={LabsPage} />
+      <Route path="/labs/:lab">
+        {({ lab }) => {
+          const found = findLab(lab);
+          return found && found.status === 'ready' && hasLabPage(found.id) ? <LabPage key={found.id} lab={found} /> : <NotFound />;
+        }}
+      </Route>
       <Route path="/settings" component={SettingsPage} />
       <Route path="/about" component={AboutPage} />
       <Route path="/:category">

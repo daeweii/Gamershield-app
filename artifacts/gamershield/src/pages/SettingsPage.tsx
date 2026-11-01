@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Monitor, Moon, Sun } from 'lucide-react';
 import { THEME_PREFERENCES, type ThemePreference } from '@/lib/platform/storage';
 import { sentrix, useSentrix } from '@/hooks/use-sentrix';
+import { reloadLearning } from '@/hooks/use-learning';
+import { reloadLabs } from '@/hooks/use-labs';
 import { toast } from '@/hooks/use-toast';
 import { PageHeader } from '@/components/sentrix/ToolCard';
 
@@ -58,11 +60,11 @@ export function SettingsPage() {
           <div className="sx-settings-row">
             <div>
               <h3>Reset everything</h3>
-              <p>Removes all Sentrix preferences from this browser: favorites, history, theme, sidebar, and Password Generator settings.</p>
+              <p>Removes everything Sentrix saved in this browser: favorites, history, theme, sidebar, checklist, learning, and lab progress, and Password Generator settings.</p>
             </div>
             {confirmReset ? (
               <span style={{ display: 'flex', gap: 8 }}>
-                <button type="button" className="sx-btn sx-btn-danger" onClick={() => { sentrix.resetAll(); setConfirmReset(false); toast({ title: 'Everything reset', description: 'Sentrix data was removed from this browser.' }); }} data-testid="button-confirm-reset">Yes, reset</button>
+                <button type="button" className="sx-btn sx-btn-danger" onClick={() => { sentrix.resetAll(); reloadLearning(); reloadLabs(); setConfirmReset(false); toast({ title: 'Everything reset', description: 'Sentrix data was removed from this browser.' }); }} data-testid="button-confirm-reset">Yes, reset</button>
                 <button type="button" className="sx-btn sx-btn-ghost" onClick={() => setConfirmReset(false)}>Cancel</button>
               </span>
             ) : (

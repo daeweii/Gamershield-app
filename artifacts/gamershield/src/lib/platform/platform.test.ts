@@ -6,6 +6,8 @@ import assert from 'node:assert/strict';
 
 import { CATEGORIES, READY_TOOLS, SECTIONS, TOOLS, appRoutes, findTool, toolHref, toolsIn } from './registry.ts';
 import { searchPlatform } from './search.ts';
+import { LESSONS } from '../../content/lessons.ts';
+import { READY_LAB_IDS } from '../../content/labs.ts';
 import { MAX_RECENT, parseTheme, parseToolIds, pushRecent, resolveTheme, toggleFavorite } from './storage.ts';
 import { TIPS, tipForDate } from './tips.ts';
 import { assessPassword, countBreaches, sha1Hex } from '../security/passwordCheck.ts';
@@ -52,7 +54,7 @@ test('appRoutes lists every page the build must write, with no clashes', () => {
   assert.ok(routes.includes('/') && routes.includes('/settings') && routes.includes('/networking/dns-lookup'));
   // Standalone pages (the generator) have their own folder, and planned tools have no page.
   assert.ok(routes.every((r) => !r.startsWith('/generator')));
-  assert.equal(routes.length, SECTIONS.length + READY_TOOLS.filter((t) => !t.standalonePath).length);
+  assert.equal(routes.length, SECTIONS.length + READY_TOOLS.filter((t) => !t.standalonePath).length + LESSONS.length + READY_LAB_IDS.size);
   for (const r of routes) assert.match(r, /^\/[a-z0-9/-]*$/, r);
 });
 

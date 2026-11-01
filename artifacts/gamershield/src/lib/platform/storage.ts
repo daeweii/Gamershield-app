@@ -13,6 +13,10 @@ export const STORAGE_KEYS = {
   sidebar: 'sentrix.sidebar.v1',
   /** IDs of ticked Security Checklist items. */
   checklist: 'sentrix.checklist.v1',
+  /** Learning Center: completed lesson IDs and best quiz scores. */
+  learning: 'sentrix.learning.v1',
+  /** IDs of completed Cyber Labs. */
+  labs: 'sentrix.labs.v1',
   /** Owned by the password generator page; listed so "reset everything" clears it too. */
   generatorPrefs: 'gamershield.generator.prefs.v1',
 } as const;

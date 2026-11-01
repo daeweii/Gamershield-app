@@ -1,10 +1,19 @@
 import { Link } from 'wouter';
-import { CATEGORIES, READY_TOOLS, findTool, type Tool } from '@/lib/platform/registry';
+import { READY_TOOLS, findTool, type Tool } from '@/lib/platform/registry';
 import { useSentrix } from '@/hooks/use-sentrix';
+import { useLearning } from '@/hooks/use-learning';
+import { useCompletedLabs } from '@/hooks/use-labs';
+import { READY_LAB_IDS } from '@/content/labs';
+import { LESSONS } from '@/content/lessons';
+import { pathPercent } from '@/lib/learning/progress';
 import { EmptyState, PageHeader, ToolCard } from '@/components/sentrix/ToolCard';
 
 export function DashboardPage() {
   const { favorites, recent } = useSentrix();
+  const learning = useLearning();
+  const labsDone = useCompletedLabs().length;
+  const learnedPercent = pathPercent(learning, LESSONS.map((l) => l.id));
+  const nextLesson = LESSONS.find((l) => !learning.completed.includes(l.id));
   const favoriteTools = favorites.map(findTool).filter((t): t is Tool => !!t && t.status === 'ready');
   const recentTools = recent.map(findTool).filter((t): t is Tool => !!t && t.status === 'ready');
 
@@ -16,7 +25,8 @@ export function DashboardPage() {
         <div className="sx-stat" role="listitem"><b>{READY_TOOLS.length}</b><span>Tools ready to use</span></div>
         <div className="sx-stat" role="listitem"><b>{favoriteTools.length}</b><span>Favorites</span></div>
         <div className="sx-stat" role="listitem"><b>{recentTools.length}</b><span>Recently used</span></div>
-        <div className="sx-stat" role="listitem"><b>{CATEGORIES.length}</b><span>Toolkit categories</span></div>
+        <div className="sx-stat" role="listitem"><b>{learning.completed.length}/{LESSONS.length}</b><span>Lessons completed</span></div>
+        <div className="sx-stat" role="listitem"><b>{labsDone}/{READY_LAB_IDS.size}</b><span>Labs completed</span></div>
       </div>
 
       <section className="sx-section" aria-labelledby="dash-fav">
@@ -35,10 +45,15 @@ export function DashboardPage() {
 
       <section className="sx-section" aria-labelledby="dash-progress">
         <div className="sx-section-head"><h2 id="dash-progress">Learning progress</h2></div>
-        <EmptyState title="Starts with the Learning Center (Phase 3)">
-          Lessons, quizzes, labs, and achievements will track your progress here once they’re built.
-          <Link href="/learning" className="sx-btn" style={{ marginTop: 6 }}>See what’s planned</Link>
-        </EmptyState>
+        <div className="sx-card">
+          <p className="gs-input-label" id="dash-learn-label" style={{ marginTop: 0 }}>{learning.completed.length} of {LESSONS.length} lessons completed ({learnedPercent}%)</p>
+          <div className="gs-progress" role="progressbar" aria-labelledby="dash-learn-label" aria-valuemin={0} aria-valuemax={100} aria-valuenow={learnedPercent}>
+            <span style={{ width: `${learnedPercent}%` }} />
+          </div>
+          {nextLesson
+            ? <Link href={`/learning/${nextLesson.id}`} className="sx-btn sx-btn-primary" style={{ marginTop: 16 }} data-testid="link-next-lesson">{learning.completed.length ? 'Continue' : 'Start'}: {nextLesson.title}</Link>
+            : <p style={{ marginTop: 12 }}>You’ve finished the Beginner path. More paths are coming.</p>}
+        </div>
       </section>
     </>
   );
