@@ -951,3 +951,10 @@ a.sx-tool-card:hover { border-color: var(--sx-red); transform: translateY(-2px);
 .sx-task-list li div { display: grid; gap: 2px; }
 .sx-task-list li span { color: var(--sx-muted); font-size: 13px; }
 @media (max-width: 900px) { .sx-terminal-layout { grid-template-columns: 1fr; } .sx-terminal { height: 380px; } }
+.sx-ir-phases { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.sx-ir-phases li { padding: 6px 12px; border-radius: 999px; background: var(--sx-surface-2); color: var(--sx-muted); font-size: 13px; font-weight: 650; }
+.sx-ir-phases li.active { background: var(--sx-red); color: var(--sx-on-red); }
+.sx-ir-phases li.done { background: var(--sx-good-soft); color: var(--sx-good); }
+.sx-ir-option { width: 100%; color: var(--sx-text); text-align: left; font: inherit; font-size: 14px; }
+.sx-ir-option:hover:not(:disabled) { border-color: var(--sx-red); }
+.sx-ir-option:disabled { cursor: default; }

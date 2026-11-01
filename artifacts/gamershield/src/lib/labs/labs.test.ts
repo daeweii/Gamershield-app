@@ -6,6 +6,40 @@ import assert from 'node:assert/strict';
 import { INITIAL_STATE, TERMINAL_TASKS, resolvePath, runCommand, type TerminalState } from './terminal.ts';
 import { LABS, LOG_LINES, LOG_QUESTIONS, READY_LAB_IDS, SIM_EMAILS } from '../../content/labs.ts';
 import { appRoutes } from '../platform/registry.ts';
+import { analyzePassword, differingBits } from './analysis.ts';
+import { IR_STEPS, NETWORK_LAB_QUIZ, PASSWORD_LAB_QUIZ, CRYPTO_LAB_QUIZ } from '../../content/labs.ts';
+
+test('password analysis: pool size, bits, and patterns', () => {
+  const a = analyzePassword('abcdefgh');
+  assert.equal(a.poolSize, 26);
+  assert.ok(Math.abs(a.bruteForceBits - 8 * Math.log2(26)) < 1e-9);
+  assert.ok(a.findings.some((f) => f.id === 'sequence'));
+  assert.ok(analyzePassword('P@ssw0rd!').findings.some((f) => f.id === 'leet'), 'symbol swaps are recognized');
+  assert.ok(analyzePassword('dragon2026').findings.some((f) => f.id === 'common'));
+  assert.ok(analyzePassword('dragon2026').findings.some((f) => f.id === 'year'));
+  assert.ok(analyzePassword('qwerty123456').findings.some((f) => f.id === 'keyboard'));
+  assert.ok(analyzePassword('aaaaaaaaaaaa1!').findings.some((f) => f.id === 'repeat'));
+  assert.deepEqual(analyzePassword('kX9#vL2$qW7!mR4z').findings, []);
+  assert.equal(analyzePassword('kX9#vL2$qW7!mR4z').poolSize, 95);
+  assert.equal(analyzePassword('').bruteForceBits, 0);
+});
+
+test('differingBits counts flipped bits between hashes', () => {
+  assert.equal(differingBits('00', '00'), 0);
+  assert.equal(differingBits('0f', 'f0'), 8);
+  assert.equal(differingBits('8', '0'), 1);
+  assert.throws(() => differingBits('ab', 'abc'));
+});
+
+test('new lab content is consistent', () => {
+  for (const quiz of [PASSWORD_LAB_QUIZ, CRYPTO_LAB_QUIZ, NETWORK_LAB_QUIZ]) {
+    for (const q of quiz) assert.ok(q.answer >= 0 && q.answer < q.options.length && q.explanation.length > 20, q.id);
+  }
+  for (const step of IR_STEPS) {
+    assert.equal(step.options.filter((o) => o.best).length, 1, `${step.id} has exactly one best response`);
+    for (const o of step.options) assert.ok(o.why.length > 20, `${step.id} explains every option`);
+  }
+});
 
 const run = (cmds: string[], state: TerminalState = INITIAL_STATE) => {
   let s = state;
