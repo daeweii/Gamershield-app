@@ -46,6 +46,16 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # Fails the run (and blocks deploying) if any shipped dependency has a
+      # known vulnerability. Build-only tools are reported but don't block,
+      # since new advisories can appear on any day without a code change.
+      - name: Audit shipped dependencies
+        run: pnpm audit --prod
+
+      - name: Audit build tools (report only)
+        run: pnpm audit
+        continue-on-error: true
+
       - name: Typecheck
         run: pnpm run typecheck
 

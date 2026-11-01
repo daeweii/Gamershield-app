@@ -4,7 +4,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { CATEGORIES, READY_TOOLS, SECTIONS, TOOLS, findTool, toolHref, toolsIn } from './registry.ts';
+import { CATEGORIES, READY_TOOLS, SECTIONS, TOOLS, appRoutes, findTool, toolHref, toolsIn } from './registry.ts';
 import { searchPlatform } from './search.ts';
 import { MAX_RECENT, parseTheme, parseToolIds, pushRecent, resolveTheme, toggleFavorite } from './storage.ts';
 import { TIPS, tipForDate } from './tips.ts';
@@ -44,6 +44,16 @@ test('all existing GamerShield tools are still available', () => {
   }
   assert.equal(toolHref(findTool('password-generator')!), 'generator/');
   assert.equal(toolHref(findTool('link-checker')!), '/security-awareness/link-checker');
+});
+
+test('appRoutes lists every page the build must write, with no clashes', () => {
+  const routes = appRoutes();
+  assert.equal(new Set(routes).size, routes.length);
+  assert.ok(routes.includes('/') && routes.includes('/settings') && routes.includes('/networking/dns-lookup'));
+  // Standalone pages (the generator) have their own folder, and planned tools have no page.
+  assert.ok(routes.every((r) => !r.startsWith('/generator')));
+  assert.equal(routes.length, SECTIONS.length + READY_TOOLS.filter((t) => !t.standalonePath).length);
+  for (const r of routes) assert.match(r, /^\/[a-z0-9/-]*$/, r);
 });
 
 // ---------------- search ----------------

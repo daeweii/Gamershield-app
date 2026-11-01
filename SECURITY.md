@@ -131,6 +131,34 @@ uploaded. Files over 1 GB are refused to avoid freezing the tab.
 - The link and message checkers read input as text and never open links.
 - User input is always rendered as text by React, never as HTML.
 
+## Content Security Policy
+Every built page carries a Content Security Policy (`securityHeaders()` in
+`artifacts/gamershield/vite.config.ts`):
+
+- **Main site:** scripts only from Sentrix itself; network connections only to
+  Sentrix plus `api.pwnedpasswords.com`, `cloudflare-dns.com`, and
+  `api.ipify.org`; no plugins, no `<base>` changes, no form submissions.
+  `style-src` allows inline styles because Radix dialogs inject a small style
+  tag to lock scrolling; inline styles can't run code.
+- **Password generator:** stricter still: no outside connections at all.
+
+Verified in a browser: every tool works with zero violations, and a test
+request to an unlisted site was blocked.
+
+## Dependency security
+- `pnpm audit` reports no known vulnerabilities in shipped or build-time
+  dependencies (as of this change).
+- CI runs `pnpm audit --prod` on every push and pull request and refuses to
+  deploy if a shipped dependency has a known vulnerability. The full audit
+  (including build tools) is reported but doesn't block.
+- Dependabot opens weekly update pull requests (with a 7-day cooldown on new
+  releases) and monthly updates for the pinned GitHub Actions. Each runs the
+  full CI checks before it can be merged.
+- `pnpm-workspace.yaml` refuses packages published less than a day ago, and
+  only allow-listed packages may run install scripts.
+- The unused template server, database packages, `zod`, and the
+  `@tailwindcss/typography` plugin were removed to shrink the attack surface.
+
 ## Known limitations
 - The Content Security Policy is set with a `<meta>` tag, so it can't include
   `frame-ancestors`. Set real HTTP headers if the host allows it.

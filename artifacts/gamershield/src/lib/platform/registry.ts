@@ -127,6 +127,17 @@ export const findTool = (id: string) => TOOLS.find((t) => t.id === id);
 export const findCategory = (id: string) => CATEGORIES.find((c) => c.id === id);
 export const toolsIn = (category: CategoryId) => TOOLS.filter((t) => t.category === category);
 
+/**
+ * Every in-app URL, used by the build to write a real page per route
+ * (so GitHub Pages answers 200, not 404, for deep links).
+ */
+export function appRoutes(): string[] {
+  return [
+    ...SECTIONS.map((s) => s.path),
+    ...TOOLS.filter((t) => t.status === 'ready' && !t.standalonePath).map((t) => `/${t.category}/${t.id}`),
+  ];
+}
+
 /** In-app route for a tool, relative to the site base. Standalone tools use their own page path. */
 export function toolHref(tool: Tool): string {
   return tool.standalonePath ? tool.standalonePath : `/${tool.category}/${tool.id}`;

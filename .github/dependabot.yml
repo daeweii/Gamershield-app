@@ -1,0 +1,27 @@
+# Dependabot opens pull requests when dependencies need updates.
+# Each PR runs the full CI checks (audit, typecheck, tests, build) before
+# anyone merges it, so an update can't break the live site unnoticed.
+version: 2
+updates:
+  # npm packages (pnpm lockfile)
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    # Match the workspace rule: don't adopt brand-new releases immediately.
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 5
+    groups:
+      # Batch routine minor and patch bumps into one PR to keep noise down.
+      minor-and-patch:
+        update-types: [minor, patch]
+
+  # GitHub Actions in .github/workflows (keeps the pinned SHAs current)
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    cooldown:
+      default-days: 14
