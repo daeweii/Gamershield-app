@@ -167,5 +167,17 @@ request to an unlisted site was blocked.
 - The Content Security Policy is set with a `<meta>` tag, so it can't include
   `frame-ancestors`. Set real HTTP headers if the host allows it.
 
+## Security review (Phase 6)
+A source review of `artifacts/gamershield/src` found:
+- No HTML injection sinks: no `innerHTML`, `dangerouslySetInnerHTML`, or `document.write`. All user input renders as text through React.
+- No dynamic code execution: no `eval`, `new Function`, or string timers.
+- Every `target="_blank"` link uses `rel="noopener noreferrer"`.
+- Randomness only from `crypto.getRandomValues`; `Math.random` is never used.
+- No logging of user data.
+- All `localStorage` access goes through sanitizing helpers.
+- Network calls only to the three documented services, matching the CSP.
+- The Terminal Simulator executes nothing; tests cover shell-injection strings.
+- `pnpm audit`: no known vulnerabilities in shipped or build dependencies.
+
 ## Reporting a problem
 Open an issue on the GitHub repository. Please don't include real passwords.

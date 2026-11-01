@@ -33,7 +33,7 @@ export function HomePage() {
         <p className="sx-eyebrow">Your cybersecurity command center</p>
         <h1 id="home-title">Learn security. <em>Use it.</em> Stay protected.</h1>
         <p>
-          Sentrix brings practical security tools, step-by-step guides, and (soon) lessons and hands-on labs into one place.
+          Sentrix brings practical security tools, short lessons, and hands-on labs into one place.
           Everything runs in your browser, so what you type stays on your device.
         </p>
         <button type="button" className="sx-hero-search" onClick={() => setSearchOpen(true)} data-testid="button-hero-search">
@@ -91,7 +91,7 @@ export function HomePage() {
         </section>
       </div>
 
-      <section className="sx-section" aria-labelledby="next-heading">
+      {upcoming.length > 0 && <section className="sx-section" aria-labelledby="next-heading">
         <div className="sx-section-head">
           <h2 id="next-heading">Coming next</h2>
           <p>Sentrix is built in phases. These sections aren’t ready yet.</p>
@@ -106,7 +106,7 @@ export function HomePage() {
             </Link>
           ))}
         </div>
-      </section>
+      </section>}
     </>
   );
 }

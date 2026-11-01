@@ -6,6 +6,12 @@
 
 Sentrix started as GamerShield, a tool to help gamers protect their accounts after I was hacked on PlayStation in middle school. It's growing into an all-in-one platform for practical security tools, lessons, and hands-on labs.
 
+![Sentrix home page in dark mode](docs/screenshots/home-dark.jpg)
+
+| Terminal Simulator lab | Lesson quiz with explanations |
+|---|---|
+| ![Terminal Simulator](docs/screenshots/terminal-lab.jpg) | ![Lesson quiz](docs/screenshots/lesson-quiz.jpg) |
+
 ## Features (working today)
 
 | Category | Tools |
@@ -29,7 +35,7 @@ Plus: global search (Ctrl+K), favorites, recently used tools, a daily security t
 - A strict Content Security Policy limits every page to Sentrix's own code and the three services above.
 - Zero known vulnerabilities in dependencies; CI audits every change and Dependabot proposes updates.
 
-Details: [SECURITY.md](SECURITY.md).
+Details: [SECURITY.md](SECURITY.md). How the code is organized: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 ## Tech stack
 
@@ -72,7 +78,7 @@ PORT=5173 BASE_PATH=/ pnpm --filter @workspace/gamershield run dev
 | 3 | Learning Center: lessons, quizzes, flashcards, progress | Beginner path done; Intermediate and Advanced next |
 | 4 | Cyber Labs: log analysis, phishing, crypto, networking, safe terminal simulator | Done (7 labs) |
 | 5 | Personalization: profiles, achievements, dashboard customization | Planned |
-| 6 | Launch: security review, dependency audit, full documentation | In progress (CSP, audits, Dependabot done) |
+| 6 | Launch: security review, dependency audit, full documentation | Done |
 
 ## Author
 
