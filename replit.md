@@ -37,7 +37,7 @@ A free, privacy-first cybersecurity toolkit and learning platform that runs enti
 
 ## Product
 
-Password security, cryptography, networking, and security-awareness tools (19 working), plus a Learning Center (Beginner path) and Cyber Labs (3 simulations). See README.md for the roadmap.
+Password security, cryptography, networking, and security-awareness tools (19 working), plus a Learning Center (Beginner path) and Cyber Labs (7 simulations). See README.md for the roadmap.
 
 ## User preferences
 

@@ -7,11 +7,19 @@ import { PageHeader } from '@/components/sentrix/ToolCard';
 import { PhishingLab } from '@/components/labs/PhishingLab';
 import { LogLab } from '@/components/labs/LogLab';
 import { TerminalLab } from '@/components/labs/TerminalLab';
+import { PasswordLab } from '@/components/labs/PasswordLab';
+import { CryptoLab } from '@/components/labs/CryptoLab';
+import { NetworkLab } from '@/components/labs/NetworkLab';
+import { IncidentLab } from '@/components/labs/IncidentLab';
 
 const LAB_COMPONENTS: Record<string, ComponentType> = {
   'phishing-simulation': PhishingLab,
   'log-analysis': LogLab,
   'terminal': TerminalLab,
+  'password-lab': PasswordLab,
+  'crypto-lab': CryptoLab,
+  'network-lab': NetworkLab,
+  'incident-response': IncidentLab,
 };
 
 export const hasLabPage = (id: string) => id in LAB_COMPONENTS;
@@ -41,7 +49,7 @@ export function LabsPage() {
           ))}
         </div>
       </section>
-      <section className="sx-section" aria-labelledby="labs-planned">
+      {planned.length > 0 && <section className="sx-section" aria-labelledby="labs-planned">
         <div className="sx-section-head"><h2 id="labs-planned">On the roadmap</h2><p>Not built yet.</p></div>
         <div className="sx-grid">
           {planned.map((lab) => (
@@ -51,7 +59,7 @@ export function LabsPage() {
             </div>
           ))}
         </div>
-      </section>
+      </section>}
     </>
   );
 }
