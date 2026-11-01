@@ -22,6 +22,8 @@ Plus: global search (Ctrl+K), favorites, recently used tools, a daily security t
 - No accounts, no server, no analytics, no tracking.
 - Nothing typed into a tool is saved. Only three opt-in buttons contact outside services (the breach check, DNS lookups, and "show my IP"), and each says exactly what it sends.
 - Only preferences (favorite tool IDs, theme, and similar) are saved in your browser, and Settings can erase them.
+- A strict Content Security Policy limits every page to Sentrix's own code and the three services above.
+- Zero known vulnerabilities in dependencies; CI audits every change and Dependabot proposes updates.
 
 Details: [SECURITY.md](SECURITY.md).
 
@@ -55,7 +57,7 @@ PORT=5173 BASE_PATH=/ pnpm --filter @workspace/gamershield run dev
 
 ## Testing
 
-73 unit tests run on Node's built-in test runner, with no extra dependencies. They cover the password generator, strength scoring, the breach-check request (only the hash prefix is sent), hashing against NIST test vectors, Base64, AES-GCM round-trips and tamper detection, IPv4/IPv6 classification, subnet math, the DNS client, URL dissection, link and message checks, the site-rules engine, copy-format escaping, search, and saved-data sanitizing. Every push to `main` runs the typecheck, tests, and build before deploying.
+74 unit tests run on Node's built-in test runner, with no extra dependencies. They cover the password generator, strength scoring, the breach-check request (only the hash prefix is sent), hashing against NIST test vectors, Base64, AES-GCM round-trips and tamper detection, IPv4/IPv6 classification, subnet math, the DNS client, URL dissection, link and message checks, the site-rules engine, copy-format escaping, search, and saved-data sanitizing. Every push and pull request runs a dependency audit, the typecheck, the tests, and the build; `main` deploys only if all pass.
 
 ## Roadmap
 
@@ -66,7 +68,7 @@ PORT=5173 BASE_PATH=/ pnpm --filter @workspace/gamershield run dev
 | 3 | Learning Center: lessons, quizzes, flashcards, progress | Next |
 | 4 | Cyber Labs: log analysis, phishing, crypto, networking, safe terminal simulator | Planned |
 | 5 | Personalization: profiles, achievements, dashboard customization | Planned |
-| 6 | Launch: security review, dependency audit, full documentation | Planned |
+| 6 | Launch: security review, dependency audit, full documentation | In progress (CSP, audits, Dependabot done) |
 
 ## Author
 
